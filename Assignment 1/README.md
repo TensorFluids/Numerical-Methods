@@ -57,7 +57,7 @@ The function $f_2(x) = \frac{1}{1+x^2}$ is the classic example introduced by Car
 
 **What happens:** As $N$ increases, the interpolation polynomial passes exactly through all $N+1$ data points. However, *between* the data points, especially near the boundaries of the domain, the polynomial oscillates wildly. The interpolation error grows unboundedly near the edges even as it decreases near the center.
 
-**Why does this happen?** The root cause lies in the distribution of the interpolation nodes. For equidistant nodes, the the interpolation error grows exponentially with $N$. This effect is particularly noticeable near the domain boundaries where equidistant nodes are sparsely distributed.
+**Why does this happen?** The root cause lies in the distribution of the interpolation nodes. For equidistant nodes, the interpolation error grows exponentially with $N$. This effect is particularly noticeable near the domain boundaries where equidistant nodes are sparsely distributed.
 
 **Why is $f_1(x)$ not affected?**
 1. The interval $[0, 1]$ is short, limiting the growth of high-degree terms.
@@ -86,7 +86,7 @@ This is consistent with the theoretical complexity:
 - Constructing the Vandermonde matrix: $O(N^2)$
 - Solving the linear system via `numpy.linalg.solve`: $O(N^3)$
 
-The dominanting factor is the $O(N^3)$ complexity of the linalg solver. Since $\left(\frac{100}{10}\right)^3 = 1000$, the observed ~1000× increase aligns well with the expected cubic growth.
+The dominating factor is the $O(N^3)$ complexity of the linalg solver. Since $\left(\frac{100}{10}\right)^3 = 1000$, the observed ~1000× increase aligns well with the expected cubic growth.
 
 ---
 
@@ -106,6 +106,6 @@ The condition number $\kappa$ measures how sensitive the solution of $V\mathbf{a
 **Observations:**
 - The condition number grows exponentially with $N$.
 - At $N = 100$, $\kappa \approx 10^{62}$ for $f_2(x)$. Since `float64` provides only ~16 digits of precision, **all digits in the solution are corrupted**. The computed coefficients are numerically meaningless.
-- Even for $f_1(x)$ at $N = 100$, $\kappa \approx 10^{20}$ means roughly 20 digits are lost; far exceeding the 16 available. The individual coefficients are comlplete numerical noise, and any reasonable-looking result from `np.polyval` is due to catastrophic cancellation (large terms nearly cancelling each other by chance).
+- Even for $f_1(x)$ at $N = 100$, $\kappa \approx 10^{20}$ means roughly 20 digits are lost; far exceeding the 16 available. The individual coefficients are complete numerical noise, and any reasonable-looking result from `np.polyval` is due to catastrophic cancellation (large terms nearly cancelling each other by chance).
 
 **Implication:** The Vandermonde matrix approach is numerically unstable for large $N$. Even when the mathematical interpolation problem is well-posed, the numerical method fails because the matrix is too ill-conditioned for floating-point arithmetic to handle.
